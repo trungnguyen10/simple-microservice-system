@@ -12,18 +12,22 @@ app.post('/events', (req, res) => {
 
   events.push(event);
 
-  axios.post('http://localhost:4000/events', event).catch((err) => {
-    console.log('error sending to localhost:4000', err);
+  axios.post('http://posts-clusterip-srv:4000/events', event).catch((err) => {
+    console.log('error sending to posts-service', err);
   });
-  axios.post('http://localhost:4001/events', event).catch((err) => {
-    console.log('error sending to localhost:4001', err);
+  axios
+    .post('http://comments-clusterip-srv:4001/events', event)
+    .catch((err) => {
+      console.log('error sending to comments-service', err);
+    });
+  axios.post('http://query-clusterip-srv:4002/events', event).catch((err) => {
+    console.log('error sending to query-service', err);
   });
-  axios.post('http://localhost:4002/events', event).catch((err) => {
-    console.log('error sending to localhost:4002', err);
-  });
-  axios.post('http://localhost:4003/events', event).catch((err) => {
-    console.log('error sending to localhost:4003', err);
-  });
+  axios
+    .post('http://moderation-clusterip-srv:4003/events', event)
+    .catch((err) => {
+      console.log('error sending to modification-service', err);
+    });
 
   res.send({ status: 'OK' });
 });
