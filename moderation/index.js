@@ -13,7 +13,7 @@ app.post('/events', (req, res) => {
     const updatedComment = { ...data, status };
 
     axios
-      .post('http://event-bus-srv:4005/events', {
+      .post('http://localhost:4005/events', {
         type: 'CommentModerated',
         data: updatedComment,
       })
