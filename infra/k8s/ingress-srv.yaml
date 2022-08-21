@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+  - host: posts.com
+    http:
+      paths:
+      - pathType: Exact
+        path: "/posts/create"
+        backend:
+          service:
+            name: posts-clusterip-srv
+            port: 
+              number: 4000
+      - pathType: Exact
+        path: "/posts"
+        backend:
+          service:
+            name: query-clusterip-srv
+            port: 
+              number: 4002
+      - pathType: Exact
+        path: "/posts"
+        backend:
+          service:
+            name: query-clusterip-srv
+            port: 
+              number: 4002
+      - pathType: Exact
+        path: "/posts/(.*)/comments"
+        backend:
+          service:
+            name: comments-clusterip-srv
+            port: 
+              number: 4001
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: client-srv
+            port: 
+              number: 3000

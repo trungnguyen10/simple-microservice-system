@@ -8,7 +8,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'http://blog.com',
   })
 );
 
@@ -29,7 +29,7 @@ app.post('/posts/:id/comments', async (req, res) => {
   commentsByPostId[req.params.id] = comments;
 
   try {
-    await axios.post('http://localhost:4005/events', {
+    await axios.post('http://event-bus-srv:4005/events', {
       type: 'CommentCreated',
       data: {
         id: commentId,
@@ -39,7 +39,7 @@ app.post('/posts/:id/comments', async (req, res) => {
       },
     });
   } catch (err) {
-    console.log('error sending to localhost:4005', err);
+    console.log('error sending to event-bus-service', err);
   }
 
   res.status(201).send(comments);
@@ -58,7 +58,7 @@ app.post('/events', async (req, res) => {
     comment.status = status;
 
     await axios
-      .post('http://localhost:4005/events', {
+      .post('http://event-bus-srv:4005/events', {
         type: 'CommentUpdated',
         data: {
           id: comment.id,
@@ -67,7 +67,7 @@ app.post('/events', async (req, res) => {
           status: comment.status,
         },
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('error sending to event-bus-service', err));
   }
 
   res.sendStatus(200);
